@@ -12,9 +12,9 @@ import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.not;
 
 @QuarkusTest
-class NumbersResourceTest {
+class NumberResourceTest {
     @Test
-    void testNumbersEndpoint() {
+    void testNumberEndpoint() {
         given()
                 .when().get("/api/numbers")
                 .then()
