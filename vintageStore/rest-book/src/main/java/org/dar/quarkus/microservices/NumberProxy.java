@@ -1,6 +1,7 @@
 package org.dar.quarkus.microservices;
 
 
+import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,5 +18,5 @@ public interface NumberProxy {
 
 @GET
 @Produces(MediaType.APPLICATION_JSON)
-IsbnThirteen generateIsbnNumbers();
+Uni<IsbnThirteen> generateIsbnNumbers();
 }
