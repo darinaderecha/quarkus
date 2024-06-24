@@ -1,6 +1,6 @@
 package org.dar.quarkus.microservices;
 
-import jakarta.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbProperty;
 
 public class IsbnThirteen {
    @JsonbProperty("isbn_13")

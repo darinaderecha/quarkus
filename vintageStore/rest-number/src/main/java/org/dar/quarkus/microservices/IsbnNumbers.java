@@ -1,8 +1,7 @@
 package org.dar.quarkus.microservices;
 
-import jakarta.json.bind.annotation.JsonbProperty;
-import jakarta.json.bind.annotation.JsonbTransient;
-
+import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
 import java.time.Instant;
 
 public class IsbnNumbers {
