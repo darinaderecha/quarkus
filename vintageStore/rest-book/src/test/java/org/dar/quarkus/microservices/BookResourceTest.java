@@ -8,6 +8,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 
 @QuarkusTest
+
 class BookResourceTest {
     @Test
     public void shouldCreateABook() {
