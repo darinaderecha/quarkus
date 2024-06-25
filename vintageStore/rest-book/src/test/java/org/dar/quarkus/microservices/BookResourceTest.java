@@ -10,6 +10,7 @@ import static org.hamcrest.CoreMatchers.startsWith;
 @QuarkusTest
 
 class BookResourceTest {
+
     @Test
     public void shouldCreateABook() {
         given()
@@ -18,7 +19,7 @@ class BookResourceTest {
                 .formParam("year", "1600")
                 .formParam("genre", "tale")
                 .when()
-                .post("http://localhost:8702/api/books")
+                .post("/api/books")
                 .then()
                 .statusCode(201)
                 .body("isbn13", startsWith("13-"))
@@ -28,5 +29,6 @@ class BookResourceTest {
                 .body("genre", is("tale"))
                 .body("creationDate", startsWith("20"));
     }
+
 
 }

@@ -25,6 +25,12 @@ public class BookResource {
     @Inject
     Logger logger;
 
+    private final BookRepository br;
+
+    public BookResource() {
+        br = new BookRepository();
+    }
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -49,10 +55,13 @@ public class BookResource {
              book.setYearOfPublication(yearOfPublication);
              book.setGenre(genre);
              book.setCreationDate(Instant.now());
+             book.setPrice(book.generateBasePrice());
              return book;
          }).chain(book -> saveBookOnDisk(book)
                  .map(savedBook -> {
                             logger.warn("Book saved on disk: " + savedBook);
+                            br.getBookrepo().put(savedBook.getIsbn13(), savedBook);
+                     System.out.println(br.getBookrepo().size());
                             return Response.status(201).entity(savedBook).build();
                         }))
                 .onFailure().recoverWithItem(throwable -> {
@@ -62,6 +71,37 @@ public class BookResource {
 
 
     }
+
+
+    @GET
+    @Path("/{isbn}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<Response> getTotalPrice(@PathParam("isbn") String isbn) {
+    return br.findBook(isbn)
+                .onItem().ifNotNull().transform(book -> {
+                    double priceWithTaxes = Double.parseDouble(book.getPrice()) * 1.25; // Add taxes
+                    book.setPrice(String.valueOf(priceWithTaxes));
+                    return Response.status(200).entity("Price for that book is : " + priceWithTaxes).build();
+                });
+
+    }
+    /*
+    Added that method for easier testing
+     */
+    @GET
+    @Path("/{title}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<Response> getTotalPriceByTitle (@PathParam("title") String  title) {
+        return br.findBookByTitle(title)
+                .onItem().ifNotNull().transform(book -> {
+                    double priceWithTaxes = Double.parseDouble(book.getPrice()) * 1.25; // Add taxes
+                    book.setPrice(String.valueOf(priceWithTaxes));
+                    return Response.status(200).entity("Price for that book is : " + priceWithTaxes).build();
+                });
+
+    }
+
+
 
 
     public Uni<Response> fallbackOnCreatingABook(@FormParam("title") String title,
@@ -77,8 +117,9 @@ public class BookResource {
             book.setYearOfPublication(yearOfPublication);
             book.setGenre(genre);
             book.setCreationDate(Instant.now());
+            book.setPrice(book.generateBasePrice());
             return book;
-        }).chain(book -> saveBookOnDisk(book)
+        }).flatMap(book -> saveBookOnDisk(book)
                 .map(savedBook -> {
                     logger.warn("Book saved on disk: " + savedBook);
                     return Response.status(206).entity(savedBook).build();
@@ -97,6 +138,8 @@ public class BookResource {
             return book;
         });
     }
+
+
 
 }
 
