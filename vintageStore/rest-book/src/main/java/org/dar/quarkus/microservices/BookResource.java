@@ -41,16 +41,17 @@ public class BookResource {
                                      @FormParam("author") String author,
                                      @FormParam("year") int yearOfPublication,
                                      @FormParam("genre") String genre) {
-        return Uni.createFrom().item(() -> {
-                    Book book = new Book();
-                    book.setIsbn13(proxy.generateIsbnNumbers().toString());
-                    book.setTitle(title);
-                    book.setAuthor(author);
-                    book.setYearOfPublication(yearOfPublication);
-                    book.setGenre(genre);
-                    return book;
-                }).onItem().transformToUni(book -> saveBookOnDisk(book)
-                        .onItem().transform(savedBook -> {
+        return proxy.generateIsbnNumbers().map(isbnThirteen -> {
+             Book book = new Book();
+             book.setIsbn13(isbnThirteen.isbn13);
+             book.setTitle(title);
+             book.setAuthor(author);
+             book.setYearOfPublication(yearOfPublication);
+             book.setGenre(genre);
+             book.setCreationDate(Instant.now());
+             return book;
+         }).chain(book -> saveBookOnDisk(book)
+                 .map(savedBook -> {
                             logger.warn("Book saved on disk: " + savedBook);
                             return Response.status(201).entity(savedBook).build();
                         }))
@@ -58,6 +59,7 @@ public class BookResource {
                     logger.error("Failed to save book on disk", throwable);
                     return Response.status(500).entity("Book could not be saved").build();
                 });
+
 
     }
 
@@ -67,16 +69,17 @@ public class BookResource {
                                                  @FormParam("year") int yearOfPublication,
                                                  @FormParam("genre") String genre) {
 
-        return Uni.createFrom().item(() -> {
+        return proxy.generateIsbnNumbers().map(isbnThirteen -> {
             Book book = new Book();
-            book.setIsbn13(proxy.generateIsbnNumbers().toString());
+            book.setIsbn13(isbnThirteen.isbn13);
             book.setTitle(title);
             book.setAuthor(author);
             book.setYearOfPublication(yearOfPublication);
             book.setGenre(genre);
+            book.setCreationDate(Instant.now());
             return book;
-        }).onItem().transformToUni(book -> saveBookOnDisk(book)
-                .onItem().transform(savedBook -> {
+        }).chain(book -> saveBookOnDisk(book)
+                .map(savedBook -> {
                     logger.warn("Book saved on disk: " + savedBook);
                     return Response.status(206).entity(savedBook).build();
                 }));

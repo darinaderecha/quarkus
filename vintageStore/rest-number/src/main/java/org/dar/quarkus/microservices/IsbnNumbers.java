@@ -21,8 +21,8 @@ public class IsbnNumbers {
     @Override
     public String toString() {
         return "IsbnNumbers{" +
-               "isbn10='" + isbn10 + '\'' +
-               ", isbn13='" + isbn13 + '\'' +
+               "isbn_10='" + isbn10 + '\'' +
+               ", isbn_13='" + isbn13 + '\'' +
                ", generationDate=" + generationDate +
                '}';
     }

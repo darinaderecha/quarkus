@@ -21,12 +21,12 @@ class BookResourceTest {
                 .post("http://localhost:8702/api/books")
                 .then()
                 .statusCode(201)
-                .body("isbn_13", startsWith("13-"))
+                .body("isbn13", startsWith("13-"))
                 .body("title", is("Mermaid"))
                 .body("author", is("Andersen"))
-                .body("year", is(1600))
+                .body("yearOfPublication", is(1600))
                 .body("genre", is("tale"))
-                .body("creation_date", startsWith("20"));
+                .body("creationDate", startsWith("20"));
     }
 
 }

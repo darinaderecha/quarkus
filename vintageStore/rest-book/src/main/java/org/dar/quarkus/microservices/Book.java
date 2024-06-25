@@ -6,7 +6,6 @@ import lombok.Setter;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import javax.json.bind.annotation.JsonbDateFormat;
-import javax.json.bind.annotation.JsonbNumberFormat;
 import javax.json.bind.annotation.JsonbProperty;
 import java.time.Instant;
 @Getter
@@ -26,23 +25,19 @@ import java.time.Instant;
         @JsonbDateFormat("yyyy/MM/dd")
         @JsonbProperty("creation_date")
         @Schema(implementation = String.class, format = "date")
-        private Instant creationDate = Instant.now();
-        @Schema(required = true)
-        @JsonbNumberFormat("value = \"#0.00\"")
-        private Double price;
+        private Instant creationDate;
 
 
 
     @Override
     public String toString() {
         return "Book{" +
-               "isbn13='" + isbn13 + '\'' +
+               "isbn_13='" + isbn13 + '\'' +
                ", title='" + title + '\'' +
                ", author='" + author + '\'' +
                ", yearOfPublication=" + yearOfPublication +
                ", genre='" + genre + '\'' +
                ", creationDate=" + creationDate +
-               ", price=" + price +
                '}';
     }
 }
