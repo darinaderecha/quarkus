@@ -1,10 +1,14 @@
 package org.dar.quarkus.microservices;
 
+import io.smallrye.mutiny.Uni;
+
 public class MockNumberProxy implements NumberProxy {
     @Override
-    public IsbnThirteen generateIsbnNumbers() {
-        IsbnThirteen isbt = new IsbnThirteen();
-        isbt.isbn13 = "13-mock";
-        return isbt;
+    public Uni<IsbnThirteen> generateIsbnNumbers() {
+        return Uni.createFrom().item(() -> {
+            IsbnThirteen isbn = new IsbnThirteen();
+            isbn.isbn13 = "13-mock";
+            return isbn;
+        });
     }
 }

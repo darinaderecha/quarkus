@@ -82,6 +82,7 @@ public class BookResource {
                 }));
     }
 
+
     private Uni<Book> saveBookOnDisk(Book book) {
         return Uni.createFrom().item(() -> {
             String bookJson = JsonbBuilder.create().toJson(book);

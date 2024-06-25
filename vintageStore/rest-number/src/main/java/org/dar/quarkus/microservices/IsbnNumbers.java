@@ -14,9 +14,8 @@ public class IsbnNumbers {
     public String isbn10;
     @JsonbProperty("isbn_13")
     public String isbn13;
-   @JsonbTransient
+    @JsonbTransient
     public Instant generationDate;
-
 
 
     @Override
