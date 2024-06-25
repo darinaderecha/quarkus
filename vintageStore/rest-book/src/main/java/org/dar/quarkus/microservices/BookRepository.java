@@ -1,11 +1,12 @@
 package org.dar.quarkus.microservices;
 
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.Getter;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /*
 Mock book repository
@@ -16,14 +17,10 @@ testdata in test package - testdata.sh
 @Getter
 public class BookRepository {
 
-    private HashMap<String, Book> bookrepo;
+    private ConcurrentHashMap<String, Book> bookrepo;
 
     public BookRepository() {
-        this.bookrepo = new HashMap<>();
-    }
-
-    public Uni<Book> findBook(String isbn) {
-        return Uni.createFrom().item(bookrepo.get(isbn));
+        this.bookrepo = new ConcurrentHashMap<>();
     }
 
     public Uni<Book> findBookByTitle(String title) {
@@ -36,8 +33,20 @@ public class BookRepository {
             return null;
         });
 
-
     }
-    public Multi<Book> findBookGenre(String title) {
+    public Uni<List<Book>> findBookGenre(String title) {
+        List<Book> suggestions = new ArrayList<>();
+        String genre = "";
+        for (Map.Entry<String, Book> entry : bookrepo.entrySet()) {
+            if (entry.getValue().getTitle().equals(title)) {
+                 genre = entry.getValue().getGenre();
+            }
+        }
+        for (Map.Entry<String, Book> entry : bookrepo.entrySet()) {
+            if (entry.getValue().getGenre().equalsIgnoreCase(genre) && !entry.getValue().getTitle().equalsIgnoreCase(title)) {
+                suggestions.add(entry.getValue());
+            }
+        }
+        return  Uni.createFrom().item(suggestions);
     }
 }

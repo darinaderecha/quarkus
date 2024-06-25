@@ -61,7 +61,6 @@ public class BookResource {
                  .map(savedBook -> {
                             logger.warn("Book saved on disk: " + savedBook);
                             br.getBookrepo().put(savedBook.getIsbn13(), savedBook);
-                     System.out.println(br.getBookrepo().size());
                             return Response.status(201).entity(savedBook).build();
                         }))
                 .onFailure().recoverWithItem(throwable -> {
@@ -73,21 +72,6 @@ public class BookResource {
     }
 
 
-    @GET
-    @Path("/{isbn}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Uni<Response> getTotalPrice(@PathParam("isbn") String isbn) {
-    return br.findBook(isbn)
-                .onItem().ifNotNull().transform(book -> {
-                    double priceWithTaxes = Double.parseDouble(book.getPrice()) * 1.25; // Add taxes
-                    book.setPrice(String.valueOf(priceWithTaxes));
-                    return Response.status(200).entity("Price for that book is : " + priceWithTaxes).build();
-                });
-
-    }
-    /*
-    Added that method for easier testing
-     */
     @GET
     @Path("/{title}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -101,8 +85,24 @@ public class BookResource {
 
     }
 
+    @GET
+    @Path("/like/{title}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<Response> suggestBooks(@PathParam("title") String title) {
+                    return br.findBookGenre(title).map(suggestion -> {
+                        if( suggestion.isEmpty()) {
+                            return Response.status(204)
+                                    .entity("There is no books at genre you are looking for. Try for another one" )
+                                    .build();
+                        } else{
+                            return Response.status(200)
+                                    .entity("Maybe look for that one? " + suggestion.get(0).getTitle() + " by "
+                                    + suggestion.get(0).getAuthor())
+                                    .build();
+                        }
+                    });
 
-
+    }
 
     public Uni<Response> fallbackOnCreatingABook(@FormParam("title") String title,
                                                  @FormParam("author") String author,

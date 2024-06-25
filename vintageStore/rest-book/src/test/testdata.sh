@@ -17,4 +17,5 @@ curl -X POST http://localhost:8702/api/books -d "title=The Endless Horizon&autho
 curl -X POST http://localhost:8702/api/books -d "title=Guardians of the Realm&author=Charlotte Lee&year=2017&genre=Fantasy"
 curl -X POST http://localhost:8702/api/books -d "title=The Vanishing Point&author=James Clark&year=2018&genre=Mystery"
 curl -X POST http://localhost:8702/api/books -d "title=The Last Expedition&author=Sophia Turner&year=2019&genre=Adventure"
-curl -X POST http://localhost:8702/api/books -d "title=Legacy of the Ancients&author=Daniel Hill&year=2020&genre=Historical"
+curl -X POST http://localhost:8702/api/books -d "title=Legacy of the Ancients&author=Daniel Hill&year=2020&genre=Adventure"
+curl -X POST http://localhost:8702/api/books -d "title=AdventureBook&author=Lily Lee&year=2020&genre=Adventure"
